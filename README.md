@@ -83,3 +83,24 @@ API-Kommunikation, Fehlerbehandlung und Zustandsmanagement werden klar vom UI ge
 
 **Navigation per benanntem Routing**
 Für bessere Lesbarkeit und Wartbarkeit wird ein zentraler `RouteManager` eingesetzt.
+
+## Fehlerbehebung / Troubleshooting
+
+### Problem: REST-Endpunkte nicht erreichbar (`404 Not Found`)
+
+Beim Aufruf von z. B. `POST /api/users/register` wurde wiederholt ein HTTP 404 zurückgegeben, obwohl die Controller-Klasse korrekt implementiert und im richtigen Package platziert war.
+
+**Ursache:**
+Visual Studio Code hat die Controller-Klasse intern nicht als Teil des angegebenen Packages erkannt. Obwohl die Datei im richtigen Verzeichnis lag, wurde sie von Spring Boot beim Start nicht eingebunden.
+
+**Lösung:**
+- Die betroffenen Dateien (Controller, DTOs usw.) wurden außerhalb von VS Code über den Windows Explorer neu erstellt bzw. aus dem alten Projekt per Explorer eingefügt.
+- Anschließend funktionierte der Component Scan korrekt, die Endpunkte waren erreichbar.
+
+### Problem: Kompilierfehler bei DTO-Zugriff
+
+**Ursache:**
+Die DTOs `UserLoginRequest` und `UserRegisterRequest` waren leer bzw. enthielten keine Getter-Methoden, was zu "cannot find symbol" Fehlern führte.
+
+**Lösung:**
+Die DTOs wurden vollständig neu implementiert (mit Feldern, Konstruktor und Gettern) und dem Projekt hinzugefügt.
