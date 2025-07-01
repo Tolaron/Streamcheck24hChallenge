@@ -42,6 +42,22 @@ Die erstellte Struktur wurde vollständig nachvollzogen. Ziel war die Klare auft
 
 ---
 
+## Verwendete KI-Unterstützung bei der Fehleranalyse
+
+Während der Implementierung von Ticket 1.3 („User Management REST API“) unterstützte die KI aktiv in folgenden Bereichen:
+
+- **Analyse von `404 Not Found`-Fehlern bei korrekten Endpunkten**  
+  Die KI half bei der Eingrenzung des Problems, dass VS Code die Controller-Datei intern nicht als gültigen Bestandteil des Projekts erkannte. Der Vorschlag, die Datei manuell im Explorer neu zu erstellen bzw. zu ersetzen, führte zur Lösung.
+
+- **Erkennung fehlender Getter-Methoden in DTO-Klassen**  
+  Anhand der Compiler-Fehlermeldungen identifizierte die KI fehlende Methoden in den DTOs und stellte vollständige, kommentierte Implementierungen bereit.
+
+- **Verifikation der Projektstruktur und Laufzeitprüfung**  
+  Die KI schlug vor, einen temporären `/api/hello`-Endpoint zur Validierung des Routings zu implementieren, was half, die Serverkonfiguration schrittweise zu testen.
+
+Die KI war in diesem Prozess ein systematischer Analyse- und Debugging-Partner, der technische Zusammenhänge nachvollziehbar erklärte und pragmatische Lösungen vorschlug.
+
+
 
 ## Transparenz-Hinweis
 
