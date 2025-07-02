@@ -1,29 +1,34 @@
 # Event Management Challenge
 
-Dies ist die Lösung zur 24h Developer-Challenge von Streamcheck24.
-Ziel ist die Entwicklung eines Event-Management-Systems mit Flutter (Mobile-App) und Spring Boot (Backend),
-inklusive REST API, persistenter Datenhaltung und ansprechender Oberfläche (keine Garantie).
+Dies ist die Lösung zur 24h Developer-Challenge von Streamcheck24.  
+Ziel war die Entwicklung eines vollständigen Event-Management-Systems bestehend aus einem Spring Boot Backend und einer Flutter Mobile-App – inklusive REST API, persistenter Datenhaltung und sauberer Benutzeroberfläche.
 
 ---
 
-## Tehcnologie-Stack
+## Technologie-Stack
 
 **Backend:**
 - Java 17
 - Spring Boot
 - Spring Web, Spring Data JPA
 - H2 In-Memory Datenbank
+- Maven
 
-**Frontend:**
+**Frontend (Mobile App):**
 - Flutter
-- Material Design
-- HTTP Package für API-Calls
+- Material Design 3
+- HTTP-Package (`http`)
+- Form Validation (Flutter Widgets)
+- Pull-to-Refresh
+- Navigation per benannten Routen
+- Manuelles State-Management (setState)
 
 **Tooling und Entwicklung:**
-- GitHub mit 'main', 'develop' und Feature-Branches (Commit/Push/Pull via SourceTree)
-- Visual Studio Codee
-- GitHub Issues zur Ticket-Verwaltung
-- Getrennte Branches für README, AI_USAGE, und ANSWERS zur Dokumentationspflege
+- GitHub mit Branch-Struktur (`main`, `develop`, `feature/...`)
+- Visual Studio Code (Backend), Android Studio (Flutter)
+- SourceTree für Git GUI
+- GitHub Issues zur Ticketverwaltung
+- Getrennte Branches für Dokumentation (`README`, `AI_USAGE`, `ANSWERS`)
 
 ---
 
@@ -31,13 +36,48 @@ inklusive REST API, persistenter Datenhaltung und ansprechender Oberfläche (kei
 
 ```plaintext
 STREAMCHECK24CHALLENGE/
-├── backend/           // Spring Boot Backend
-├── mobile-app/        // Flutter Mobile App
-├── docs/              // Screenshots, Diagramme, Notizen
-├── README.md          // Dieses Dokument
-├── AI_USAGE.md        // Dokumentation zur KI-Nutzung
-└── ANSWERS.md         // Antworten auf theoretische Fragen
+├── backend/             // Spring Boot Backend
+├── mobile_app/          // Flutter App (UI + HTTP-Client)
+├── docs/                // Screenshots, Diagramme, Notizen
+├── README.md            // Dieses Dokument
+├── AI_USAGE.md          // Dokumentation zur KI-Nutzung
+└── ANSWERS.md           // Antworten auf Theoriefragen
 ```
+
+---
+
+## Umsetzung nach Tickets
+
+### Phase 1 – Backend
+
+| Ticket   | Thema                          | Status     |
+|----------|--------------------------------|------------|
+| 1.1      | Spring Boot Setup              | ✅        |
+| 1.2      | JPA Entities (User, Event…)    | ✅        |
+| 1.3      | User Management API            | ✅        |
+| 1.4      | Event API (CRUD)               | ✅        |
+| 1.5      | Registrierung zu Events        | ✅        |
+| 1.6      | Validierung + ExceptionHandling| ✅        |
+| 1.7      | Unit-Test (UserService)        | ✅        |
+
+### Phase 2 – Mobile-App UI
+
+| Ticket   | Thema                              | Status |
+|----------|------------------------------------|--------|
+| 2.1      | Flutter Projekt Setup              | ✅     |
+| 2.2      | Login/Register UI + TabBar         | ✅     |
+| 2.3      | Event-Liste + Pull-to-Refresh      | ✅     |
+| 2.4      | Event Detail View                  | ✅     |
+| 2.5      | Create Event Formular              | ✅     |
+| 2.6      | Profile Screen mit TabBar          | ✅     |
+| 2.7      | Generisches ErrorWidget            | ✅     |
+
+### Phase 3 – API-Integration
+
+| Ticket   | Thema                                | Status |
+|----------|--------------------------------------|--------|
+| 3.1      | Anbindung Login/Register API         | ✅     |
+| 3.1      | Anbindung Event-Endpunkte (GET, POST, DELETE) | ❌ (rückgängig gemacht wegen Zeitmangel (wäre sonst Buggy gewesen)) |
 
 ---
 
@@ -45,62 +85,64 @@ STREAMCHECK24CHALLENGE/
 
 ### Backend
 
-**Spring Boot mit H2 In-Memory Datenbank**
-Für diese Challenge habe ich mich bewusst für H2 entschieden, um schnelle Iteration, 
-minimale Einrichtung und einfache Testbarkeit zu gewährleisten.
-Die Datenbank läuft im Speicher und ist über `/h2-console` erreichbar.
-Persistenz über Neustarts hinweg ist für diesen Projektzeitraum nicht erforderlich.
+**Warum Spring Boot mit H2?**  
+- Schnell aufsetzbar, kein Setup für Datenbankserver
+- Ideal für Entwicklung und Tests
+- Ermöglicht einfache API-Tests über Swagger oder Postman
 
-**JPA & Entity-Modellierung**
-Die Datenstruktur wird mit klaren JPA-Entitäten umgesetzt:
-- `Users`: Benutzer mit Rolle (ORGANIZER, PARTICIPANT)
-- `Event`: Veranstaltung mit Teilnehmerbegrenzung
-- `EventRegistration`: Verknüpfung zwischen Benutzern und Events
-Beziehungen (z.B. Many-To-One) sind über Annotationen modelliert.
+**Datenmodellierung mit JPA**  
+- Alle Entitäten enthalten sinnvolle Annotationen (`@ManyToOne`, `@OneToMany`)
+- Validierung per `@NotNull`, `@Size` usw.
 
-**Saubere Schichtenarchitektur (MVC + Service Layer)**
-- `Controller`: REST-Endpunkte
-- `Service`: Geschäftslogik (z.B. Registrierung, Event-Validierung)
-- `Repository`: Datenzugriff per JpaRepository
+**Fehlerbehandlung**  
+- Globales Exception-Handling via `@ControllerAdvice`
+- Eigene Fehlerklassen für `NotFound`, `ValidationError`
 
-**REST-konformes API-Design**
-Die Routenstruktur folgt Best Practices:
-- RessourcenNamen im Plural (`/api/events`)
-- HTTP-Methoden semantisch korrekt(`GET`, `POST`, `DELETE`)
-- Sauberes Fehler-Handling via `@ControllerAdvice`
+**GET/POST/DELETE klar getrennt**
+- Alle Endpunkte REST-konform
 
 ### Frontend
 
-**FLutter mit Provider oder einfachem State Management**
-Das UI wird durch kleine, wiederverwendbare Widgets strukturiert. 
-Zustandsverwaltung erfolgt komponentennah (z.B. `setState`) oder bei wachsender Komplexität über `Provider`.
+**UI-Strategie**
+- Klar getrennte Widgets für jede View (Login, Eventliste, Detail, Create, Profile)
+- Form-Validierung mit Flutter-internen Validatoren
+- TabBar zur Umschaltung zwischen Login/Register und Tabs im ProfileScreen
 
-**Responsives Layout & Material Design**
-Die App verwendet Flutters Standardkomponenten zur Gewährleistung einer konsistenten UX auf verschiedenen Geräten.
+**State-Management**  
+- Manuell per `setState()` für diese Challenge ausreichend  
+- Für produktiven Einsatz wäre Provider, Riverpod oder Bloc geeigneter
 
-**Trennung von Logik und UI**
-API-Kommunikation, Fehlerbehandlung und Zustandsmanagement werden klar vom UI getrennt gehalten.
+**Fehlermanagement**
+- Einheitliches `ErrorDisplay` Widget für REST-Fehler oder UI-Probleme
 
-**Navigation per benanntem Routing**
-Für bessere Lesbarkeit und Wartbarkeit wird ein zentraler `RouteManager` eingesetzt.
+---
 
-## Fehlerbehebung / Troubleshooting
+## Bekannte Probleme & ihre Lösungen
 
-### Problem: REST-Endpunkte nicht erreichbar (`404 Not Found`)
+### Problem: Flutter startet nicht (Desktop-Projekt fehlt)
+**Ursache:** Desktop-Unterstützung nicht aktiviert  
+**Lösung:** Projekt auf Android eingestellt, Fokus auf Mobile-App behalten.
 
-Beim Aufruf von z. B. `POST /api/users/register` wurde wiederholt ein HTTP 404 zurückgegeben, obwohl die Controller-Klasse korrekt implementiert und im richtigen Package platziert war.
+### Problem: EntityManager-Fehler bei H2-Shutdown
+**Lösung:** War harmlos – H2-Logging nach dem Testlauf. Ignoriert.
 
-**Ursache:**
-Visual Studio Code hat die Controller-Klasse intern nicht als Teil des angegebenen Packages erkannt. Obwohl die Datei im richtigen Verzeichnis lag, wurde sie von Spring Boot beim Start nicht eingebunden.
+### Problem: HTTP-Statuscode nicht 200/201
+**Lösung:** Fehlertexte im `EventService` ergänzt, z. B. bei `createEvent` und `deleteEvent`.
 
-**Lösung:**
-- Die betroffenen Dateien (Controller, DTOs usw.) wurden außerhalb von VS Code über den Windows Explorer neu erstellt bzw. aus dem alten Projekt per Explorer eingefügt.
-- Anschließend funktionierte der Component Scan korrekt, die Endpunkte waren erreichbar.
+### Problem: Events konnten nicht geladen werden (Flutter)
+**Ursache:** Fehler bei JSON-Struktur  
+**Lösung:** `Event.fromJson()` angepasst (Datum parsen, ID zu String casten)
 
-### Problem: Kompilierfehler bei DTO-Zugriff
+### Problem: Es konnte keine Verbindung zu den JPA repositorys aufgebaut werden (Spring Data Repository)
+**Ursache:** Visual Studio Code hat sie (aus einem mir immernoch unerfindlichen Grund) nicht "erkannt/registriert"
+**Lösung:** Eher ein Workaround nach mehreren Stunden rumprobieren: Die dateien im Windows-Explorer erstellt bzw. wahlweise in den richtigen Ordner reinkopiert/reingezogen. Erst dann hat Visual Studio Code die dateien "erkannt". Das Problem hat mit abstand die meiste Zeit und Nerven gekostet.
 
-**Ursache:**
-Die DTOs `UserLoginRequest` und `UserRegisterRequest` waren leer bzw. enthielten keine Getter-Methoden, was zu "cannot find symbol" Fehlern führte.
+---
 
-**Lösung:**
-Die DTOs wurden vollständig neu implementiert (mit Feldern, Konstruktor und Gettern) und dem Projekt hinzugefügt.
+## Fazit
+
+Innerhalb der 24h-Challenge wurden sowohl ein vollständiges Backend mit funktionierender API als auch eine mobile App mit den meisten UI-Screens und Form-Validierungen umgesetzt.  
+REST-Integration für Event-Endpoints im Flutter-Frontend wurde begonnen, aber für die Dokumentation temporär zurückgebaut.  
+
+Die App ist modular aufgebaut, testfähig und ließe sich leicht erweitern  
+Trotz Zeitdruck wurde auf klare Code-Struktur, Fehlerbehandlung und Wiederverwendbarkeit geachtet.
