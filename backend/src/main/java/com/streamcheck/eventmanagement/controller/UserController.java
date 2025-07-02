@@ -6,6 +6,8 @@ import com.streamcheck.eventmanagement.model.User;
 import com.streamcheck.eventmanagement.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/users")                                                           // Basisroute für User-bezogene Endpunkte
@@ -20,7 +22,7 @@ public class UserController
 
     // Registriert einen neuen Benutzer
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody UserRegisterRequest request)
+    public ResponseEntity<User> register(@Valid @RequestBody UserRegisterRequest request)
     {
         User user = userService.register(request);
         return ResponseEntity.ok(user);

@@ -20,7 +20,12 @@ public class UserService {
     }
 
     // Registriert einen neuen Benutzer
-    public User register(UserRegisterRequest request) {
+    public User register(UserRegisterRequest request) 
+    {
+        if (userRepository.findByEmail(request.getEmail()).isPresent())
+        {
+            throw new RuntimeException("User with email already exists");
+        }
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
