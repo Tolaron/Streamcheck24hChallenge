@@ -18,7 +18,7 @@ class EventApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Event App',
-      initialRoute: '/',
+      initialRoute: '/auth',
       routes: {
         '/': (context) => const MainNavigationScreen(),
         '/auth': (context) => const AuthScreen(),
