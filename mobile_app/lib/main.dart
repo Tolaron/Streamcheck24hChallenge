@@ -4,6 +4,8 @@ import 'screens/event_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/event_list_screen.dart';
 import 'screens/create_event_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/main_navigation_screen.dart';
 
 void main() {
   runApp(const EventApp());
@@ -16,13 +18,10 @@ class EventApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Event App',
-      initialRoute: '/create',
+      initialRoute: '/',
       routes: {
-        '/': (context) => const HomeScreen(),
-        '/event': (context) => const EventScreen(),
-        '/events': (context) => const EventListScreen(),
+        '/': (context) => const MainNavigationScreen(),
         '/auth': (context) => const AuthScreen(),
-        '/create': (context) => const CreateEventScreen(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
