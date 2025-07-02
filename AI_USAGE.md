@@ -38,7 +38,11 @@ Die erstellte Struktur wurde vollständig nachvollzogen. Ziel war die Klare auft
 
 ### Eintrag 2
 
-**Wird zur Dokumentation laufend ergänzt**
+## Unterstützung bei der Umsetzung der REST API
+
+Die KI wurde für folgende Aufgaben genutzt:
+
+Bei der erstellung REST API wurde die KI zur Diagnose eines VS Code-spezifischen Problems verwendet: Zwar waren Klassen im richtigen Ordner vorhanden, sie wurden jedoch von der IDE nicht korrekt erkannt. Die KI schlug als Workaround das Anlegen/Kopieren über den Explorer vor, was das Problem erfolgreich löste. (Die Findung dieses Problems, hat sehr viel Zeit verschlungen)
 
 ---
 
