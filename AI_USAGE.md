@@ -1,19 +1,19 @@
 # Dokumentation zur KI-Nutzung
 
 Dieses Projekt wurde im Rahmen einer 24h-Challenge umgesetzt.
-KI-Tools kamen punktuell zur Anwendung, umPlanung, Code-Generierung, Strukturierung und Dokumentation zu beschleunigen.
+KI-Tools kamen punktuell zur Anwendung, um Planung, Code-Generierung, Strukturierung und Dokumentation zu beschleunigen.
 Alle Inhalte wurden verstanden, geprüft und bei Bedarf angepasst.
 
 ---
 
 ## Übersicht: KI-Einsatzbereiche
 
-| Bereich             | Tool        | Zweck                                                       |
-|---------------------|-------------|-------------------------------------------------------------|
-| Projektplanung*     | ChatGPT     | Aufteilung in Tickets, Branch-Strategie, Architekturideen   |
-| Code-Generierung*   | ChatGPT     | REST-Controller, DTOs, Flutter-Widgets (Basisstruktur)      |
-| Dokumentation*      | ChatGPT     | README.md, AI_USAGE.md, ANSWERS.md (inkl. Erklärungen)      |
-| Fehleranalyse       | ChatGPT     | Debugging-Hinweise bei Spring Boot Konfigurationen etc.     |
+| Bereich             | Tool            | Zweck                                                       |
+|---------------------|-----------------|-------------------------------------------------------------|
+| Projektplanung*     | ChatGPT         | Aufteilung in Tickets, Branch-Strategie, Architekturideen   |
+| Code-Generierung*   | ChatGPT         | REST-Controller, DTOs, Flutter-Widgets (Basisstruktur)      |
+| Dokumentation*      | ChatGPT         | README.md, AI_USAGE.md, ANSWERS.md (inkl. Erklärungen)      |
+| Fehleranalyse       | ChatGPT/Deepseek| Debugging-Hinweise bei Spring Boot Konfigurationen etc.     |
 *nach Bedarf angepasst
 
 ---
@@ -32,39 +32,56 @@ Alle Inhalte wurden verstanden, geprüft und bei Bedarf angepasst.
     - Ticket-Reihenfolge final selbst festgelegt.
     - Branches manuell im Repository erstellt
 - **Verständnisnachweis:**
-Die erstellte Struktur wurde vollständig nachvollzogen. Ziel war die Klare aufteilung des Projektes in verschiedene Fortschrittsphasen und jeweilig unterschiedliche Tickets, welche zur Erstellung von Feature-Branches dienen sollen. Allem voran geht es mir um die Übersichtlichkeit und Nachvollziehbarkeit der Fortschritte während des Entwicklungsprozesses.
+Die erstellte Struktur wurde vollständig nachvollzogen. Ziel war die klare Aufteilung des Projektes in verschiedene Fortschrittsphasen und jeweilig unterschiedliche Tickets nach vorlage der vorgegebenen Aufgaben, welche zur Erstellung von Feature-Branches dienen sollen. Allem voran ging es mir um die Übersichtlichkeit und Nachvollziehbarkeit der Fortschritte während des Entwicklungsprozesses.
 
 ---
 
-### Eintrag 2
-
-## Unterstützung bei der Umsetzung der REST API
+### Eintrag 2: Unterstützung bei der REST-API-Umsetzung
 
 Die KI wurde für folgende Aufgaben genutzt:
 
-Bei der erstellung REST API wurde die KI zur Diagnose eines VS Code-spezifischen Problems verwendet: Zwar waren Klassen im richtigen Ordner vorhanden, sie wurden jedoch von der IDE nicht korrekt erkannt. Die KI schlug als Workaround das Anlegen/Kopieren über den Explorer vor, was das Problem erfolgreich löste. (Die Findung dieses Problems, hat sehr viel Zeit verschlungen)
+- **Ursprüngliches Problem (VS Code Bug):**
+  Obwohl die Spring-Komponenten im richtigen Verzeichnis lagen, wurden sie vom Component Scan nicht erkannt.
+- **Lösung (KI-Vorschlag nachdem alle anderen Fehler/Probleme ausgeschlossen werden konnten):**
+  Neu-Anlegen bzw. Kopieren der Dateien über den Windows Explorer – erst danach wurden sie korrekt registriert.
+- **Folge:** Das Problem kostete mehrere Stunden und war der größte Zeitfresser der gesamten Challenge.
 
 ---
 
-## Verwendete KI-Unterstützung bei der Fehleranalyse
+### Eintrag 3: Fehleranalyse & Debugging
 
-Während der Implementierung von Ticket 1.3 („User Management REST API“) unterstützte die KI aktiv in folgenden Bereichen:
+- **Spring Boot `404` trotz korrekter Endpunkte:**
+  Ursache war die interne Erkennung der Projektstruktur durch die IDE.
+- **Fehlende DTO-Getter:**
+  Die KI erkannte auf Basis der Fehlermeldung die Ursache und generierte gültige DTOs mit Konstruktoren und Gettern.
+- **Routingprüfung per Dummy-Endpoint (`/api/hello`):**
+  Half bei der iterativen Prüfung, ob der Server korrekt läuft.
 
-- **Analyse von `404 Not Found`-Fehlern bei korrekten Endpunkten**  
-  Die KI half bei der Eingrenzung des Problems, dass VS Code die Controller-Datei intern nicht als gültigen Bestandteil des Projekts erkannte. Der Vorschlag, die Datei manuell im Explorer neu zu erstellen bzw. zu ersetzen, führte zur Lösung.
+---
 
-- **Erkennung fehlender Getter-Methoden in DTO-Klassen**  
-  Anhand der Compiler-Fehlermeldungen identifizierte die KI fehlende Methoden in den DTOs und stellte vollständige, kommentierte Implementierungen bereit.
+### Eintrag 4: Flutter-Frontend & API-Integration
 
-- **Verifikation der Projektstruktur und Laufzeitprüfung**  
-  Die KI schlug vor, einen temporären `/api/hello`-Endpoint zur Validierung des Routings zu implementieren, was half, die Serverkonfiguration schrittweise zu testen.
+Insbesondere in der zweiten Hälfte des Projekts – unter wachsendem Zeitdruck – habe ich KI verstärkt eingesetzt, um:
 
-Die KI war in diesem Prozess ein systematischer Analyse- und Debugging-Partner, der technische Zusammenhänge nachvollziehbar erklärte und pragmatische Lösungen vorschlug.
+- **Flutter-Screens strukturiert aufzubauen** (z. B. Login/Register mit TabBar, Event-Listen, Detailseiten)
+- **Formularvalidierung effizient umzusetzen**
+- **API-Service-Klassen schnell und korrekt zu erstellen** (GET, POST, DELETE)
+- **Fehlermeldungen und Ladeanzeigen einzubinden** (`LoadingIndicator`, `ErrorDisplay`)
 
+Trotz der KI-Unterstützung habe ich sämtliche generierten Vorschläge geprüft, angepasst und kontextgerecht eingebunden. Entscheidungen zur UI-Logik, Navigation und Fehlerbehandlung wurden bewusst und nachvollziehbar getroffen.
 
+---
+
+### Eintrag 5: Dokumentation
+
+Die gesamte Projektdokumentation (README.md, AI_USAGE.md, ANSWERS.md) wurde durch KI unterstützt, jedoch in enger Abstimmung mit den realen Projektfortschritten. Besonders beim Formulieren der Herausforderungen und Umgehungslösungen wurde die KI genutzt, um präzise und nachvollziehbar zu dokumentieren, was im Zeitrahmen möglich war – und was nicht.
+
+---
 
 ## Transparenz-Hinweis
 
-Die KI wurde genutzt, um produktiver zu arbeiten, nicht um Verständnis zu ersetzen.
-Jede durch KI erstellte Komponente wurde einzeln nachvollzogen, überarbeitet und *selbstständig* kommentiert.
-Diese Dokumentation wird bis zur Abgabe fortgeführt.
+Die KI wurde genutzt, um produktiver zu arbeiten – nicht um Verständnis zu ersetzen.  
+Insbesondere in der finalen Phase des Projekts – nach einem schwerwiegenden Bug und unter großem Zeitdruck – war sie ein unverzichtbares Werkzeug zur strukturierten und pragmatischen Umsetzung.  
+Jede Komponente wurde einzeln nachvollzogen, kommentiert und (wo nötig) angepasst.  
+Die Eigenleistung liegt nicht nur im Quellcode, sondern auch im konzeptionellen Durchhaltevermögen, in pragmatischer Planung, der Priorisierung und im Umgang mit auftretenden Hindernissen.
+
