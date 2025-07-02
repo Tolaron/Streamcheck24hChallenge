@@ -1,37 +1,36 @@
 import 'package:flutter/material.dart';
+import '../services/api_client.dart';
+import '../services/auth_service.dart';
 
-// Authentifizierungsbildschirm mit TabBar
-class AuthScreen extends StatefulWidget
-{
+class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin
-{
+class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // Form Keys für Validierung
   final _loginFormKey = GlobalKey<FormState>();
   final _registerFormKey = GlobalKey<FormState>();
 
-  // Textfeld-Controller
   final _loginEmailController = TextEditingController();
   final _registerEmailController = TextEditingController();
   final _registerUsernameController = TextEditingController();
 
+  final _authService = AuthService(ApiClient(baseUrl: 'http://10.0.2.2:8080')); // Emulator-Adresse
+
+  bool _isLoading = false;
+
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     _tabController.dispose();
     _loginEmailController.dispose();
     _registerEmailController.dispose();
@@ -39,7 +38,43 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     super.dispose();
   }
 
-  // Login-Formular
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _handleLogin() async {
+    if (!_loginFormKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    final error = await _authService.login(_loginEmailController.text.trim());
+    setState(() => _isLoading = false);
+
+    if (error == null) {
+      Navigator.pushReplacementNamed(context, '/');
+    } else {
+      _showMessage('Fehler: $error');
+    }
+  }
+
+  Future<void> _handleRegister() async {
+    if (!_registerFormKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    final error = await _authService.register(
+      _registerUsernameController.text.trim(),
+      _registerEmailController.text.trim(),
+      'PARTICIPANT',
+    );
+    setState(() => _isLoading = false);
+
+    if (error == null) {
+      _showMessage('Registrierung erfolgreich');
+      _tabController.animateTo(0);
+    } else {
+      _showMessage('Fehler: $error');
+    }
+  }
+
   Widget _buildLoginForm() {
     return Form(
       key: _loginFormKey,
@@ -58,15 +93,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                if (_loginFormKey.currentState!.validate()) {
-                  // Aktion später in Ticket 3.1
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Login erfolgreich (Simuliert)')),
-                  );
-                }
-              },
-              child: const Text('Login'),
+              onPressed: _isLoading ? null : _handleLogin,
+              child: _isLoading ? const CircularProgressIndicator() : const Text('Login'),
             ),
           ],
         ),
@@ -74,7 +102,6 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     );
   }
 
-  // Register-Formular
   Widget _buildRegisterForm() {
     return Form(
       key: _registerFormKey,
@@ -102,14 +129,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                if (_registerFormKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Registrierung erfolgreich (Simuliert)')),
-                  );
-                }
-              },
-              child: const Text('Registrieren'),
+              onPressed: _isLoading ? null : _handleRegister,
+              child: _isLoading ? const CircularProgressIndicator() : const Text('Registrieren'),
             ),
           ],
         ),
