@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/dummy_events.dart';
 import '../models/event.dart';
+import 'event_detail_screen.dart';
 
 class EventListScreen extends StatefulWidget {
   const EventListScreen({super.key});
@@ -43,7 +44,20 @@ class _EventListScreenState extends State<EventListScreen> {
               title: Text(event.title),
               subtitle: Text('${event.location} – ${event.date.toLocal().toString().split(' ')[0]}'),
               onTap: () {
-                // später: Navigation zu Detail
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventDetailScreen(
+                      event: {
+                        'title': 'Flutter Workshop',
+                        'description': 'Lerne Flutter an einem Tag!',
+                        'date': '2025-07-03',
+                        'location': 'Online',
+                        'maxParticipants': 50,
+                      },
+                    ),
+                  ),
+                );
               },
             );
           },
